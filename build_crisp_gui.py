@@ -3,7 +3,7 @@ from pathlib import Path
 import json, zipfile, random
 
 ROOT = Path(__file__).parent
-W, H, SCALE = 176, 128, 4
+W, H, SCALE = 176, 220, 4
 IMG_W, IMG_H = W*SCALE, H*SCALE
 im = Image.new("RGB", (IMG_W, IMG_H), (19,19,31))
 d = ImageDraw.Draw(im)
@@ -36,14 +36,14 @@ def txt_center(text,x,y,size,fill,stroke=None,bold=True,maxwidth=None):
     d.text((int(drawx),int(drawy)),text,font=f,fill=fill,
            stroke_width=(SCALE//2 if stroke else 0),stroke_fill=stroke)
 # Base: pixel stone wall with bevel
-box(0,0,175,127,"#161620")
-for yy in range(0,128,7):
+box(0,0,175,219,"#161620")
+for yy in range(0,220,7):
     for xx in range((yy//7 % 2)*7,176,14):
         base=random.choice(["#222433","#292939","#252738"])
-        box(xx,yy,min(175,xx+13),min(127,yy+6),base)
+        box(xx,yy,min(175,xx+13),min(219,yy+6),base)
         line([(xx,yy),(min(175,xx+12),yy)],"#39364b",1)
-box(0,0,175,127,None,"#655978",2)
-box(2,2,173,125,None,"#12111d",2)
+box(0,0,175,219,None,"#655978",2)
+box(2,2,173,217,None,"#12111d",2)
 # Header
 box(3,3,172,26,"#171521")
 box(5,4,170,24,"#24202a","#805d35",1)
@@ -171,9 +171,59 @@ for yy in (99,100,101):
 for x in [5,61,117]:
     box(x+3,30,x+7,31,"#ffffff")
     box(x+46,120,x+50,121,"#ffffff")
-# Bottom instruction strip
-box(4,124,171,127,"#171620")
-txt_center("TRÊS REINOS • UMA ETERNIDADE",88,123.5,6.5,"#ead6a8",None,True,165)
+# Divisor: o painel inferior do inventario ganha sua propria arte.
+box(4,123,171,130,"#171620","#80684c",1)
+txt_center("TRES REINOS  •  UMA ETERNIDADE",88,124.2,6,"#ead6a8",None,True,163)
+
+# PAINEL INFERIOR. Feito na resolucao nativa: nao estica os desenhos/rostos.
+themes = [
+    ("#2c101a", "#a9291c", "#ff9140", "CHAMAS", "PODER"),
+    ("#1b1535", "#6843aa", "#d5a5ff", "SOMBRAS", "MAGIA"),
+    ("#133459", "#277ebe", "#fff0a8", "LUZ", "HONRA"),
+]
+for idx,(bg,edge,accent,title,subtitle) in enumerate(themes):
+    x=5+56*idx
+    box(x,132,x+53,203,"#14131e",edge,2)
+    box(x+3,135,x+50,201,bg,accent,1)
+    # Piso de pedras com iluminacao coerente para cada reino.
+    for row in range(180,199,5):
+        line([(x+5,row),(x+48,row)],"#353046",1)
+        for k in range(4):
+            xx=x+5+k*12+(row%2)*3
+            line([(xx,row),(xx,row+4)],"#30263c",1)
+    # Placa central do simbolo de cada faccao.
+    circle((x+8,137,x+45,174), "#171825",edge,2)
+    circle((x+12,141,x+41,170), bg,accent,1)
+    if idx==0:
+        # Brasao da chama infernal, desenho de silhueta forte.
+        poly([(x+26,146),(x+20,154),(x+22,158),(x+17,156),
+              (x+18,166),(x+23,169),(x+32,169),(x+37,163),
+              (x+34,156),(x+32,159)],"#f05a1f")
+        poly([(x+26,153),(x+22,161),(x+25,167),(x+30,166),
+              (x+32,160)],"#ffd34d")
+        poly([(x+27,159),(x+26,166),(x+30,166)],"#fff0b3")
+    elif idx==1:
+        # Cristal do purgatorio com rune central.
+        poly([(x+26,144),(x+36,154),(x+33,164),(x+26,170),
+              (x+18,164),(x+16,154)],"#bb7aff")
+        poly([(x+26,147),(x+32,155),(x+26,168)],"#e8d3ff")
+        poly([(x+26,147),(x+20,155),(x+26,168)],"#6432ba")
+        line([(x+18,155),(x+34,155)],"#ffffff",1)
+    else:
+        # Emblema do ceu: estrela e duas asas brancas.
+        poly([(x+26,144),(x+29,152),(x+38,154),(x+30,158),
+              (x+26,168),(x+22,158),(x+14,154),(x+23,152)],"#ffdb73")
+        poly([(x+26,147),(x+28,155),(x+26,164),(x+23,155)],"#ffffff")
+        poly([(x+13,159),(x+21,162),(x+22,167),(x+15,165)],"#f6f9ff")
+        poly([(x+40,159),(x+32,162),(x+31,167),(x+38,165)],"#f6f9ff")
+    txt_center(title,x+26.5,176.5,8.8,"#fff7e7","#11101c",True,50)
+    txt_center(subtitle,x+26.5,190.2,7,accent,None,True,45)
+
+# Moldura final chega ate a borda inferior da GUI, atras do inventario.
+box(4,206,171,217,"#171521","#9c7a46",1)
+line([(8,208),(168,208)],"#f0c676",1)
+txt_center("CLIQUE NO REINO PARA ESCOLHER",88,210.0,7.0,"#fff2bf","#13131b",True,162)
+box(0,218,175,219,"#b78a52")
 
 # Resample to native dimensions using high-quality small text antialias.
 small = im.resize((W,H),Image.Resampling.LANCZOS)
@@ -187,10 +237,10 @@ fontdir=ROOT/"assets"/"aeternum"/"font"
 fontdir.mkdir(parents=True,exist_ok=True)
 (fontdir/"gui.json").write_text(json.dumps({"providers":[
     {"type":"space","advances":{chr(0xe100):-8}},
-    {"type":"bitmap","file":"aeternum:font/reinos.png","ascent":13,"height":128,"chars":[chr(0xe101)]}
+    {"type":"bitmap","file":"aeternum:font/reinos.png","ascent":13,"height":220,"chars":[chr(0xe101)]}
 ]},ensure_ascii=False,indent=2),encoding="utf-8")
 (ROOT/"pack.mcmeta").write_text(json.dumps({"pack":{"pack_format":34,
-    "description":"AETERNUM RankUP - Menu de Reinos (Nitido v2)"}},ensure_ascii=False,indent=2),encoding="utf-8")
+    "description":"AETERNUM RankUP - Menu de Reinos (Tela Inteira v3)"}},ensure_ascii=False,indent=2),encoding="utf-8")
 pack=ROOT/"AETERNUM_Reinos_GUI_Pack.zip"
 with zipfile.ZipFile(pack,"w",compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
     for p in [ROOT/"pack.mcmeta",fontdir/"gui.json",outdir/"reinos.png"]:
