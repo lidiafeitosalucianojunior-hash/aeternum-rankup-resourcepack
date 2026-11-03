@@ -3,16 +3,54 @@
     {
       "type": "space",
       "advances": {
-        "": -8
+        "": -8,
+        "": -1,
+        "": -176
       }
     },
     {
       "type": "bitmap",
-      "file": "aeternum:font/reinos.png",
+      "file": "aeternum:font/reinos_hd_linha_0.png",
       "ascent": 13,
-      "height": 220,
+      "height": 44,
       "chars": [
-        ""
+        ""
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "aeternum:font/reinos_hd_linha_1.png",
+      "ascent": -31,
+      "height": 44,
+      "chars": [
+        ""
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "aeternum:font/reinos_hd_linha_2.png",
+      "ascent": -75,
+      "height": 44,
+      "chars": [
+        ""
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "aeternum:font/reinos_hd_linha_3.png",
+      "ascent": -119,
+      "height": 44,
+      "chars": [
+        ""
+      ]
+    },
+    {
+      "type": "bitmap",
+      "file": "aeternum:font/reinos_hd_linha_4.png",
+      "ascent": -163,
+      "height": 44,
+      "chars": [
+        ""
       ]
     }
   ]
