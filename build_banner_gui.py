@@ -3,7 +3,7 @@ from PIL import Image, ImageOps
 import json, zipfile, hashlib
 
 ROOT = Path(__file__).resolve().parent
-SOURCE = Path.home() / "Downloads" / "Aeternum_ Escolha Seu Reino.png"
+SOURCE = ROOT / "nova_imagem_hires.avif"
 if not SOURCE.is_file():
     raise FileNotFoundError(SOURCE)
 image = Image.open(SOURCE).convert("RGBA")
@@ -47,7 +47,7 @@ font_path.write_text(
     json.dumps({
         "pack": {
             "pack_format": 34,
-            "description": "AETERNUM - Escolha seu Reino HD (20 partes)"
+            "description": "AETERNUM - Escolha seu Reino (nova arte HD)"
         }
     }, indent=2, ensure_ascii=False),
     encoding="utf-8"
