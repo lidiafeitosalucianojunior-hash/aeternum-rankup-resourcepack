@@ -66,6 +66,8 @@ with zipfile.ZipFile(target,"w",compression=zipfile.ZIP_DEFLATED,compresslevel=9
     ] + sorted(texture_dir.glob("reinos_hd_linha_*.png"))
     for fp in allfiles:
         z.write(fp, fp.relative_to(ROOT).as_posix())
+from make_chat_icons import install
+install(ROOT, target)
 with zipfile.ZipFile(target) as z:
     assert z.testzip() is None
     for row in range(5):
